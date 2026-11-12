@@ -32,6 +32,7 @@ TOOLS = [
     "description":(
       "读取项目内 UTF-8 文本文件的指定行，返回带行号的内容，用于查看和理解代码。"
       "请求行数 end_line - start_line + 1 不能超过 max_lines。"
+      " end_line - start_line + 1 大于 max_lines 时，自动调整 end_line 以满足限制。"
       ),
     "input_schema":{
       "type":"object",
