@@ -1,7 +1,7 @@
 from pathlib import Path
 from diff_file import diff_file
 from errors import ToolError
-
+from hashlib import sha256
 
 def preview_replace(path : str ,old_text : str ,new_text : str) -> dict:
     if not isinstance(path, str) or not path.strip():
@@ -15,7 +15,8 @@ def preview_replace(path : str ,old_text : str ,new_text : str) -> dict:
     requested = Path(path)
 
     try:
-        origin_text = requested.read_text(encoding="utf-8")
+        raw = requested.read_bytes()
+        origin_text = raw.decode("utf-8")
     except UnicodeDecodeError as error:
         raise ToolError("本工具仅支持 UTF-8 文本文件") from error
     
@@ -33,6 +34,7 @@ def preview_replace(path : str ,old_text : str ,new_text : str) -> dict:
     return {
         "path": str(requested),
         "diff": diff_file(origin_text, update_text),
+        "original_hash": sha256(raw).hexdigest(),
     }
 
 if __name__ == "__main__":
